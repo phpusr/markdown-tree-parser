@@ -17,6 +17,7 @@ Hello from Russia
 '''
 
 out = Parser().parse(text)
+
 assert out.title == 'Title'
 assert out.source == '\n'
 

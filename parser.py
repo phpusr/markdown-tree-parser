@@ -36,6 +36,9 @@ class Out(Element):
     def full_source(self):
         return f'{self._source}{self.root.full_source}{super().full_source}'
 
+    def __str__(self):
+        return 'Out'
+
 
 class Heading(Element):
     def __init__(self, parent, level, text, text_source):
@@ -54,7 +57,7 @@ class Heading(Element):
 
 
 class Parser:
-    DEBUG = False
+    DEBUG = not False
 
     def parse(self, text):
         self.out = Out()
@@ -139,7 +142,11 @@ class Parser:
         elif level > self.current.level:
             parent = self.current
         else:
-            parent = self.current.parent
+            level_diff = self.current.level - level + 1
+            tmp_current = self.current
+            for index in range(level_diff):
+                parent = tmp_current.parent
+                tmp_current = parent
 
         self.current = Heading(parent, level, text, text_source)
 
@@ -149,6 +156,9 @@ class Parser:
             parent.add_child(self.current)
 
         if self.DEBUG:
-            print(f'Create: {str(self.current)}')
+            spaces = '  '.join(['' for _ in range(parent.level + 1)]) if parent != self.out else ''
+            print(f'{spaces}<{str(parent)}>')
+            spaces = '  '.join(['' for _ in range(self.current.level + 1)])
+            print(f'{spaces}<{str(self.current)}> (+)')
 
         return True
