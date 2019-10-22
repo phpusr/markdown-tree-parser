@@ -57,7 +57,7 @@ class Heading(Element):
 
 
 class Parser:
-    DEBUG = not False
+    DEBUG = 1
 
     def parse(self, text):
         self.out = Out()
@@ -101,6 +101,9 @@ class Parser:
         if next_string is None:
             return False
 
+        if self.DEBUG >= 2:
+            print(f'- parse_heading_var_one with level: {level}, next_string: "{next_string}"')
+
         if level == 1:
             tmpl = '='
         elif level == 2:
@@ -121,8 +124,8 @@ class Parser:
         )
 
     def _parse_heading_var_two(self, level, string):
-        if False:
-            print(f' - parse heading with level: {level}, string: {string}')
+        if self.DEBUG >= 2:
+            print(f'- parse_heading_var_two with level: {level}, string: "{string}"')
 
         regex = '^(\s?#{%s}\s+)(.*)$' % level
         result = re.search(regex, string)
@@ -155,7 +158,7 @@ class Parser:
         else:
             parent.add_child(self.current)
 
-        if self.DEBUG:
+        if self.DEBUG >= 1:
             spaces = '  '.join(['' for _ in range(parent.level + 1)]) if parent != self.out else ''
             print(f'{spaces}<{str(parent)}>')
             spaces = '  '.join(['' for _ in range(self.current.level + 1)])
