@@ -59,16 +59,31 @@ class Parser:
     def parse(self, text):
         self.out = Out()
         self.current = None
+        jump_to_next = False
 
         strings = text.split('\n')
         for index in range(len(strings)):
+            if jump_to_next:
+                jump_to_next = False
+                continue
+
             string = strings[index]
+            next_string = strings[index + 1] if index + 1 < len(strings) else None
             is_heading = False
-            for level in range(6):
-                is_heading = self._parse_heading(level + 1, string)
+
+            for level in range(1, 3):
+                is_heading = self._parse_heading_var_one(level, string, next_string)
                 if is_heading:
                     break
-                # TODO parse heading with '---' and '==='
+
+            if is_heading:
+                jump_to_next = True
+                continue
+
+            for level in range(1, 7):
+                is_heading = self._parse_heading_var_two(level, string)
+                if is_heading:
+                    break
 
             if not is_heading:
                 ending = '' if index == len(strings) - 1 else '\n'
@@ -79,7 +94,30 @@ class Parser:
 
         return self.out
 
-    def _parse_heading(self, level, string):
+    def _parse_heading_var_one(self, level, string, next_string):
+        if next_string is None:
+            return False
+
+        if level == 1:
+            tmpl = '='
+        elif level == 2:
+            tmpl = '-'
+        else:
+            raise Exception(f'Not support level: {level}')
+
+        regex = '^\s?%s{3,}\s*$' % tmpl
+        result = re.search(regex, next_string)
+
+        if result is None:
+            return False
+
+        return self._parse_heading_action(
+            level=level,
+            text=string.strip(),
+            text_source=f'{string}\n{next_string}'
+        )
+
+    def _parse_heading_var_two(self, level, string):
         if False:
             print(f' - parse heading with level: {level}, string: {string}')
 
@@ -89,9 +127,13 @@ class Parser:
         if result is None:
             return False
 
-        text = result[2]
-        text_source = result[1] + text
+        return self._parse_heading_action(
+            level=level,
+            text=result[2],
+            text_source=result[1] + result[2]
+        )
 
+    def _parse_heading_action(self, level, text, text_source):
         if self.current is None:
             parent = self.out
         elif level > self.current.level:
