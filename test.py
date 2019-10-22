@@ -23,3 +23,5 @@ assert out[0].source == '\n'
 assert out[0][0].text == 'Hello 3'
 assert out[0][0].source == 'Hello from Russia\n'
 
+assert out.full_source == text
+

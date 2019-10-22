@@ -19,6 +19,10 @@ class Element:
     def source(self):
         return self._source
 
+    @property
+    def full_source(self):
+        return ''.join([x.full_source for x in self.children])
+
 
 class Out(Element):
     root = None
@@ -28,19 +32,30 @@ class Out(Element):
         if self.root is not None:
             return self.root.text
 
+    @property
+    def full_source(self):
+        return f'{self._source}{self.root.full_source}{super().full_source}'
+
 
 class Heading(Element):
-    def __init__(self, parent, level, text):
+    def __init__(self, parent, level, text, text_source):
         super().__init__()
         self.parent = parent
         self.level = level
         self.text = text
+        self.text_source = text_source
+
+    @property
+    def full_source(self):
+        return f'{self.text_source}\n{self._source}{super().full_source}'
 
     def __str__(self):
         return self.text
 
 
 class Parser:
+    DEBUG = False
+
     def parse(self, text):
         self.out = Out()
         self.current = None
@@ -68,13 +83,14 @@ class Parser:
         if False:
             print(f' - parse heading with level: {level}, string: {string}')
 
-        regex = '^\s?#{%s}\s+(.*)$' % level
+        regex = '^(\s?#{%s}\s+)(.*)$' % level
         result = re.search(regex, string)
 
         if result is None:
             return False
 
-        text = result[1]
+        text = result[2]
+        text_source = result[1] + text
 
         if self.current is None:
             parent = self.out
@@ -83,12 +99,14 @@ class Parser:
         else:
             parent = self.current.parent
 
-        self.current = Heading(parent, level, text)
+        self.current = Heading(parent, level, text, text_source)
 
         if level == 1 and self.out.root is None:
             self.out.root = self.current
         else:
             parent.add_child(self.current)
 
-        print(f'Create: {str(self.current)}')
+        if self.DEBUG:
+            print(f'Create: {str(self.current)}')
+
         return True
