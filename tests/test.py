@@ -1,6 +1,6 @@
 import unittest
 
-from parser import parse_string
+from parser import parse_string, parse_file
 
 
 class TestParser(unittest.TestCase):
@@ -49,6 +49,23 @@ class TestParser(unittest.TestCase):
         self.assertEqual(chapter2[1].source, '\nComponents File Manager\n')
 
         self.assertEqual(out.full_source, text)
+
+    def test_heading_diff(self):
+        text = '''
+
+## Heading 3
+
+# Heading 2
+'''
+        out = parse_string(text)
+        self.assertEqual(out[0].text, 'Heading 3')
+        self.assertEqual(out.root.text, 'Heading 2')
+
+    @unittest.skip("temp")
+    def test_parse_todo(self):
+        out = parse_file('/home/phpusr/notes/todo.md')
+        with open('tests/out.md', 'w') as f:
+            f.write(out.full_source)
 
 
 if __name__ == '__main__':

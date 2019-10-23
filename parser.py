@@ -41,6 +41,7 @@ class Element:
 
 class Out(Element):
     root = None
+    level = 0
 
     @property
     def title(self):
@@ -168,11 +169,9 @@ class Parser:
         elif level > self.current.level:
             parent = self.current
         else:
-            level_diff = self.current.level - level + 1
-            tmp_current = self.current
-            for index in range(level_diff):
-                parent = tmp_current.parent
-                tmp_current = parent
+            parent = self.current.parent
+            while parent.level >= level:
+                parent = parent.parent
 
         self.current = Heading(parent, level, text, text_source)
 
