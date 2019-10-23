@@ -3,14 +3,17 @@ import re
 
 class Element:
     def __init__(self):
-        self._source = ''
+        self._source = None
         self.children = []
 
     def add_child(self, el):
         self.children.append(el)
 
     def add_source(self, source):
-        self._source += source
+        if self._source is None:
+            self._source = source
+        else:
+            self._source += '\n' + source
 
     def __getitem__(self, item):
         return self.children[item]
@@ -21,7 +24,10 @@ class Element:
 
     @property
     def full_source(self):
-        return ''.join([x.full_source for x in self.children])
+        if len(self.children) == 0:
+            return ''
+
+        return '\n' + '\n'.join([x.full_source for x in self.children])
 
 
 class Out(Element):
@@ -34,7 +40,12 @@ class Out(Element):
 
     @property
     def full_source(self):
-        return f'{self._source}{self.root.full_source}{super().full_source}'
+        result = ''
+        if self._source is not None:
+            result += f'{self._source}\n'
+        result += self.root.full_source
+        result += super().full_source
+        return result
 
     def __str__(self):
         return 'Out'
@@ -50,7 +61,11 @@ class Heading(Element):
 
     @property
     def full_source(self):
-        return f'{self.text_source}\n{self._source}{super().full_source}'
+        result = f'{self.text_source}'
+        if self._source is not None:
+            result += f'\n{self._source}'
+        result += super().full_source
+        return result
 
     def __str__(self):
         return self.text
@@ -89,11 +104,10 @@ class Parser:
                     break
 
             if not is_heading:
-                ending = '' if index == len(strings) - 1 else '\n'
                 if self.current is None:
-                    self.out.add_source(string + ending)
+                    self.out.add_source(string)
                 else:
-                    self.current.add_source(string + ending)
+                    self.current.add_source(string)
 
         return self.out
 
