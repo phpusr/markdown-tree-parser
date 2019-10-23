@@ -1,6 +1,15 @@
 import re
 
 
+def parse_string(string):
+    return Parser().parse(string)
+
+
+def parse_file(file_path):
+    with open(file_path) as f:
+        return parse_string(f.read())
+
+
 class Element:
     def __init__(self):
         self._source = None

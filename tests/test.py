@@ -1,6 +1,6 @@
 import unittest
 
-from parser import Parser
+from parser import parse_string
 
 
 class TestParser(unittest.TestCase):
@@ -9,7 +9,8 @@ class TestParser(unittest.TestCase):
         with open('tests/example_1.md') as f:
             text = f.read()
 
-        out = Parser().parse(text)
+        out = parse_string(text)
+
         with open('tests/out.md', 'w') as f:
             f.write(out.full_source)
 
