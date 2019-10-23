@@ -1,17 +1,17 @@
 import unittest
 
-from parser import parse_string, parse_file
+from parser import parse_string
 
 
 class TestParser(unittest.TestCase):
 
     def test_parse(self):
-        with open('tests/example_1.md') as f:
+        with open('example_1.md') as f:
             text = f.read()
 
         out = parse_string(text)
 
-        with open('tests/out.md', 'w') as f:
+        with open('out.md', 'w') as f:
             f.write(out.full_source)
 
         self.assertEqual(out.title, 'Title')
@@ -60,12 +60,6 @@ class TestParser(unittest.TestCase):
         out = parse_string(text)
         self.assertEqual(out[0].text, 'Heading 3')
         self.assertEqual(out.root.text, 'Heading 2')
-
-    @unittest.skip("temp")
-    def test_parse_todo(self):
-        out = parse_file('/home/phpusr/notes/todo.md')
-        with open('tests/out.md', 'w') as f:
-            f.write(out.full_source)
 
 
 if __name__ == '__main__':

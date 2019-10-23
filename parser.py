@@ -184,6 +184,6 @@ class Parser:
             spaces = '  '.join(['' for _ in range(parent.level + 1)]) if parent != self.out else ''
             print(f'{spaces}<{str(parent)}>')
             spaces = '  '.join(['' for _ in range(self.current.level + 1)])
-            print(f'{spaces}<{str(self.current)}> (+)')
+            print(f'{spaces}(+) <{str(self.current)}>')
 
         return True
