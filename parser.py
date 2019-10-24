@@ -88,6 +88,7 @@ class Parser:
         self.out = Out()
         self.current = None
         jump_to_next = False
+        code_block = False
 
         strings = text.split('\n')
         for index in range(len(strings)):
@@ -96,22 +97,29 @@ class Parser:
                 continue
 
             string = strings[index]
-            next_string = strings[index + 1] if index + 1 < len(strings) else None
             is_heading = False
 
-            for level in range(1, 3):
-                is_heading = self._parse_heading_var_one(level, string, next_string)
-                if is_heading:
-                    break
+            """ Search code block """
+            if re.search(r'^\s*```.*$', string) is not None:
+                code_block = not code_block
 
-            if is_heading:
-                jump_to_next = True
-                continue
+            """ Search and parse headings """
+            if not code_block:
+                next_string = strings[index + 1] if index + 1 < len(strings) else None
 
-            for level in range(1, 7):
-                is_heading = self._parse_heading_var_two(level, string)
+                for level in range(1, 3):
+                    is_heading = self._parse_heading_var_one(level, string, next_string)
+                    if is_heading:
+                        break
+
                 if is_heading:
-                    break
+                    jump_to_next = True
+                    continue
+
+                for level in range(1, 7):
+                    is_heading = self._parse_heading_var_two(level, string)
+                    if is_heading:
+                        break
 
             if not is_heading:
                 if self.current is None:
