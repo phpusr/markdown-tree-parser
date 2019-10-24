@@ -1,17 +1,31 @@
+import os
 import unittest
 
-from parser import parse_string
+from markdown_tree_parser.parser import parse_string
+
+tests_dir = 'tests'
+current_dir = os.getcwd()
+if os.path.basename(current_dir) != tests_dir:
+    current_dir = os.path.join(current_dir, tests_dir)
+
+print(f'current_dir: {current_dir}\n')
 
 
 class TestParser(unittest.TestCase):
 
+    def setUp(self):
+        print('\n')
+
+    def tearDown(self):
+        print('')
+
     def test_parse(self):
-        with open('example_1.md') as f:
+        with open(os.path.join(current_dir, 'example_1.md')) as f:
             text = f.read()
 
         out = parse_string(text)
 
-        with open('out.md', 'w') as f:
+        with open(os.path.join(current_dir, 'out.md'), 'w') as f:
             f.write(out.full_source)
 
         self.assertEqual(out.title, 'Title')

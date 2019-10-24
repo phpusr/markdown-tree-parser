@@ -1,6 +1,6 @@
 import unittest
 
-from parser import parse_string
+from markdown_tree_parser.parser import parse_string
 
 
 class TestParser(unittest.TestCase):
