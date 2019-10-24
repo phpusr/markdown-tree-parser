@@ -1,2 +1,6 @@
 /.idea/
 /.venv/
+
+/build/
+/dist/
+/markdown_tree_parser.egg-info/
