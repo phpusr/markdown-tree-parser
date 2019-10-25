@@ -32,11 +32,11 @@ class TestParser(unittest.TestCase):
         self.assertEqual(out.title, 'Title')
         self.assertEqual(out.source, None)
 
-        self.assertEqual(out.root.text, 'Title')
-        self.assertEqual(out.root.source, '')
+        self.assertEqual(out.main.text, 'Title')
+        self.assertEqual(out.main.source, '')
 
-        self.assertEqual(out.root[0].text, 'Sub Title')
-        self.assertEqual(out.root[0].source, '')
+        self.assertEqual(out.main[0].text, 'Sub Title')
+        self.assertEqual(out.main[0].source, '')
 
         self.assertEqual(out[0].text, 'Hello')
         self.assertEqual(out[0].source, 'Some text\n')
@@ -74,7 +74,7 @@ class TestParser(unittest.TestCase):
 '''
         out = parse_string(text)
         self.assertEqual(out[0].text, 'Heading 3')
-        self.assertEqual(out.root.text, 'Heading 2')
+        self.assertEqual(out.main.text, 'Heading 2')
 
     def test_code_block(self):
         text = '''
@@ -118,8 +118,24 @@ print('test')
 '''
         out = parse_string(text)
         self.assertEqual(out.title, 'Hello')
-        self.assertEqual(len(out.root), 0)
+        self.assertEqual(len(out.main), 0)
         self.assertEqual(len(out), 0)
+
+    def test_root_in_heading(self):
+        text = '''
+Title
+=====
+
+# Hello
+
+## Hello 2
+
+### Hello 3
+'''
+        out = parse_string(text)
+        self.assertIs(out[0].root, out)
+        self.assertIs(out[0][0].root, out)
+        self.assertIs(out[0][0][0].root, out)
 
 
 if __name__ == '__main__':

@@ -43,20 +43,20 @@ class Element:
 
 
 class Out(Element):
-    root = None
+    main = None
     level = 0
 
     @property
     def title(self):
-        if self.root is not None:
-            return self.root.text
+        if self.main is not None:
+            return self.main.text
 
     @property
     def full_source(self):
         result = ''
         if self._source is not None:
             result += f'{self._source}\n'
-        result += self.root.full_source
+        result += self.main.full_source
         result += super().full_source
         return result
 
@@ -65,8 +65,9 @@ class Out(Element):
 
 
 class Heading(Element):
-    def __init__(self, parent, level, text, text_source):
+    def __init__(self, root, parent, level, text, text_source):
         super().__init__()
+        self.root = root
         self.parent = parent
         self.level = level
         self.text = text
@@ -185,10 +186,10 @@ class Parser:
             while parent.level >= level:
                 parent = parent.parent
 
-        self.current = Heading(parent, level, text, text_source)
+        self.current = Heading(self.out, parent, level, text, text_source)
 
-        if level == 1 and self.out.root is None:
-            self.out.root = self.current
+        if level == 1 and self.out.main is None:
+            self.out.main = self.current
         else:
             parent.add_child(self.current)
 
