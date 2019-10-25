@@ -66,19 +66,34 @@ class Heading(Element):
         self.root = root
         self.parent = parent
         self.level = level
-        self.text = text
-        self.text_source = text_source
+        self._text = text
+        self._text_source = text_source
+
+    text = property()
+
+    @text.getter
+    def text(self):
+        return self._text
+
+    @text.setter
+    def text(self, value):
+        self._text_source = self._text_source.replace(self._text, value)
+        self._text = value
+
+    @property
+    def text_source(self):
+        return self._text_source
 
     @property
     def full_source(self):
-        result = f'{self.text_source}'
+        result = f'{self._text_source}'
         if self.source is not None:
             result += f'\n{self.source}'
         result += super().full_source
         return result
 
     def __str__(self):
-        return self.text
+        return self._text
 
 
 class Parser:

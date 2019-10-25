@@ -144,6 +144,13 @@ Title
         out.source = 'New source'
         self.assertEqual(out.source, 'New source')
 
+    def test_set_text(self):
+        text = '# Hello'
+        out = parse_string(text)
+        self.assertEqual(out.main.text_source, '# Hello')
+        out.main.text = 'Hello World'
+        self.assertEqual(out.main.text_source, '# Hello World')
+
 
 if __name__ == '__main__':
     unittest.main()
