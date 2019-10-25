@@ -151,6 +151,11 @@ Title
         out.main.text = 'Hello World'
         self.assertEqual(out.main.text_source, '# Hello World')
 
+    def test_with_emtpy_string(self):
+        out = parse_string('')
+        self.assertIsNone(out.main)
+        self.assertEqual(len(out), 0)
+
 
 if __name__ == '__main__':
     unittest.main()
