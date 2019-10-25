@@ -27,6 +27,9 @@ class Element:
     def __getitem__(self, item):
         return self.children[item]
 
+    def __len__(self):
+        return len(self.children)
+
     @property
     def source(self):
         return self._source
@@ -130,7 +133,7 @@ class Parser:
         return self.out
 
     def _parse_heading_var_one(self, level, string, next_string):
-        if next_string is None:
+        if next_string is None or re.search(r'^\s*$', string) is not None:
             return False
 
         if self.DEBUG >= 2:

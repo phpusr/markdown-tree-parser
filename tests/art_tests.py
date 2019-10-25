@@ -1,5 +1,6 @@
-import os
 import unittest
+
+import os
 
 from markdown_tree_parser.parser import parse_string
 
@@ -105,6 +106,20 @@ print('test')
         self.assertEqual(out[0][1].text, 'Code 2')
         self.assertEqual(out[0][1].source, "```python\n# TODO\nprint('test')\n```\n")
         self.assertEqual(out[1].text, 'Heading')
+
+    def test_split_line(self):
+        text = '''
+# Hello
+
+-------
+
+======
+
+'''
+        out = parse_string(text)
+        self.assertEqual(out.title, 'Hello')
+        self.assertEqual(len(out.root), 0)
+        self.assertEqual(len(out), 0)
 
 
 if __name__ == '__main__':
