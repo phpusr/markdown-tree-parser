@@ -1,13 +1,13 @@
 import re
 
 
-def parse_string(string):
-    return Parser().parse(string)
+def parse_string(string, debug_level=0):
+    return Parser(debug_level).parse(string)
 
 
-def parse_file(file_path):
+def parse_file(file_path, debug_level=0):
     with open(file_path) as f:
-        return parse_string(f.read())
+        return parse_string(f.read(), debug_level)
 
 
 class Element:
@@ -85,7 +85,8 @@ class Heading(Element):
 
 
 class Parser:
-    DEBUG = 1
+    def __init__(self, debug_level=0):
+        self.DEBUG = debug_level
 
     def parse(self, text):
         self.out = Out()
