@@ -12,27 +12,8 @@ def parse_file(file_path, debug_level=0):
 
 class Element:
     def __init__(self):
-        self._source = None
+        self.source = None
         self.children = []
-
-    def add_child(self, el):
-        self.children.append(el)
-
-    def add_source(self, source):
-        if self._source is None:
-            self._source = source
-        else:
-            self._source += '\n' + source
-
-    def __getitem__(self, item):
-        return self.children[item]
-
-    def __len__(self):
-        return len(self.children)
-
-    @property
-    def source(self):
-        return self._source
 
     @property
     def full_source(self):
@@ -40,6 +21,21 @@ class Element:
             return ''
 
         return '\n' + '\n'.join([x.full_source for x in self.children])
+
+    def add_child(self, el):
+        self.children.append(el)
+
+    def add_source(self, source):
+        if self.source is None:
+            self.source = source
+        else:
+            self.source += '\n' + source
+
+    def __getitem__(self, item):
+        return self.children[item]
+
+    def __len__(self):
+        return len(self.children)
 
 
 class Out(Element):
@@ -54,8 +50,8 @@ class Out(Element):
     @property
     def full_source(self):
         result = ''
-        if self._source is not None:
-            result += f'{self._source}\n'
+        if self.source is not None:
+            result += f'{self.source}\n'
         result += self.main.full_source
         result += super().full_source
         return result
@@ -76,8 +72,8 @@ class Heading(Element):
     @property
     def full_source(self):
         result = f'{self.text_source}'
-        if self._source is not None:
-            result += f'\n{self._source}'
+        if self.source is not None:
+            result += f'\n{self.source}'
         result += super().full_source
         return result
 

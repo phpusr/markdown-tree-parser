@@ -137,6 +137,13 @@ Title
         self.assertIs(out[0][0].root, out)
         self.assertIs(out[0][0][0].root, out)
 
+    def test_set_source(self):
+        text = 'Source text'
+        out = parse_string(text)
+        self.assertEqual(out.source, 'Source text')
+        out.source = 'New source'
+        self.assertEqual(out.source, 'New source')
+
 
 if __name__ == '__main__':
     unittest.main()
