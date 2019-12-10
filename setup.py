@@ -7,13 +7,13 @@ with open('README.md') as f:
 
 setuptools.setup(
     name='markdown-tree-parser',
-    version='0.0.1',
+    version='0.0.1-2',
     author='phpusr',
     author_email='phpusr@gmail.com',
     description='Markdown tree parser',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='',
+    url='https://github.com/phpusr/markdown-tree-parser',
     packages=setuptools.find_packages(),
     classifiers=[
         'Programming Language :: Python :: 3',
