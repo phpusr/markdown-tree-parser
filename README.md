@@ -7,7 +7,14 @@ Parse markdown file to python object, which contains markdown tree headings
 ### Usage examples
 
 ```python
-def test_code_block(self):
+import unittest
+
+from markdown_tree_parser.parser import parse_string
+
+
+class TestParser(unittest.TestCase):
+
+    def test_code_block(self):
         text = '''
 Title
 =====
@@ -37,4 +44,8 @@ print('test')
         self.assertEqual(out[0][1].text, 'Code 2')
         self.assertEqual(out[0][1].source, "```python\n# TODO\nprint('test')\n```\n")
         self.assertEqual(out[1].text, 'Heading')
+
+        
+if __name__ == '__main__':
+    unittest.main()
 ```
