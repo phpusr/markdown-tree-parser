@@ -7,7 +7,7 @@ with open('README.md') as f:
 
 setuptools.setup(
     name='markdown-tree-parser',
-    version='0.0.1-5',
+    version='0.1',
     author='phpusr',
     author_email='phpusr@gmail.com',
     description='Markdown tree parser',
