@@ -5,8 +5,8 @@ def parse_string(string, debug_level=0):
     return Parser(debug_level).parse(string)
 
 
-def parse_file(file_path, debug_level=0):
-    with open(file_path) as f:
+def parse_file(file_path, debug_level=0, encoding='utf-8'):
+    with open(file_path, encoding=encoding) as f:
         return parse_string(f.read(), debug_level)
 
 
